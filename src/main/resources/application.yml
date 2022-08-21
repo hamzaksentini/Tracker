@@ -1,0 +1,30 @@
+server:
+  port: 8082
+spring:
+  devtools:
+    restart:
+      enabled: true
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:h2:file:./target/h2db/db/tracker;DB_CLOSE_DELAY=-1
+    username: root
+    password:
+    hikari:
+      poolName: Hikari
+      auto-commit: false
+  h2:
+    console:
+      enabled: true
+  jpa:
+    database: H2
+    show-sql: true
+
+
+tracker:
+  cors:
+    allowed-origins: 'http://localhost:8082,http://localhost:4200'
+    allowed-methods: '*'
+    allowed-headers: '*'
+    exposed-headers: 'Authorization,Link,X-Total-Count,X-${jhipster.clientApp.name}-alert,X-${jhipster.clientApp.name}-error,X-${jhipster.clientApp.name}-params'
+    allow-credentials: true
+    max-age: 1800
