@@ -8,37 +8,80 @@
 
     <changeSet id="202206281028" author="hamza">
         <createTable tableName="T_USER">
-            <column name="id" type="bigint" autoIncrement="${autoIncrement}">
+
+            <column name="user_id" type="bigint" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
+
             <column name="login" type="varchar(50)">
                 <constraints unique="true" nullable="false"/>
             </column>
-            <column name="password_hash" type="varchar(60)"/>
-            <column name="first_name" type="varchar(50)"/>
-            <column name="last_name" type="varchar(50)"/>
-            <column name="email" type="varchar(191)">
-                <constraints unique="true" nullable="true"/>
+
+            <column name="password_hash" type="varchar(50)">
+                <constraints unique="true" nullable="false"/>
             </column>
-            <column name="created_by" type="varchar(50)">
-                <constraints nullable="false"/>
+
+            <column name="first_name" type="varchar(50)">
+                <constraints unique="false" nullable="false"/>
             </column>
-            <column name="created_date" type="timestamp"/>
+
+            <column name="last_name_name" type="varchar(50)">
+                <constraints unique="false" nullable="false"/>
+            </column>
+
+            <column name="email" type="varchar(254)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+
+            <column name="phone_number" type="varchar(254)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+
+            <column name="title" type="varchar(254)">
+                <constraints unique="false" nullable="false"/>
+            </column>
+
+            <column name="salary" type="decimal">
+                <constraints unique="false" nullable="false"/>
+            </column>
+
+            <column name="hourly_cost_rate" type="decimal">
+                <constraints unique="false" nullable="false"/>
+            </column>
+
+            <column name="join_date" type="date">
+                <constraints unique="false" nullable="false"/>
+            </column>
+
+            <column name="leave_date" type="date">
+                <constraints unique="false" nullable="false"/>
+            </column>
+
+
         </createTable>
 
         <createTable tableName="T_AUTHORITY">
+
+
             <column name="name" type="varchar(50)">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
+
+
         </createTable>
 
         <createTable tableName="T_USER_AUTHORITY">
+
+
             <column name="user_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
+
             <column name="authority_name" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
+
+
         </createTable>
 
         <addPrimaryKey columnNames="user_id, authority_name" tableName="T_USER_AUTHORITY"/>

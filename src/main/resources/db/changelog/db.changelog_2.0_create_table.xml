@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <property name="autoIncrement" value="true"/>
+
+    <changeSet id="202208281028" author="hamza">
+
+        <createTable tableName="T_COMPANY">
+
+            <column name="id" type="bigint" autoIncrement="${autoIncrement}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="name" type="varchar(50)">
+                <constraints unique="false" nullable="false"/>
+            </column>
+
+            <column name="time_for_payment" type="int">
+                <constraints unique="false" nullable="false"/>
+            </column>
+
+            <column name="project_id" type="varchar">
+                <constraints unique="false" nullable="false"/>
+            </column>
+
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="project_id"
+                                 baseTableName="T_COMPANY"
+                                 constraintName="fk_projects"
+                                 referencedColumnNames="id"
+                                 referencedTableName="T_PROJECT"/>
+
+        <createTable tableName="T_PROJECT">
+
+            <column name="id" type="bigint" autoIncrement="${autoIncrement}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="name" type="varchar(50)">
+                <constraints unique="false" nullable="false"/>
+            </column>
+
+            <column name="company_id" type="int">
+                <constraints unique="true" nullable="false"/>
+            </column>
+
+            <column name="daily_rate" type="decimal">
+                <constraints unique="false" nullable="false"/>
+            </column>
+
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="company_id"
+                                 baseTableName="T_PROJECT"
+                                 constraintName="fk_company_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="T_COMPANY"/>
+
+
+        <createTable tableName="T_DAILY_WORK_TIME">
+
+        <column name="id" type="bigint" autoIncrement="${autoIncrement}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="hours_worked" type="double">
+                <constraints unique="false" nullable="false"/>
+            </column>
+
+            <column name="date" type="date">
+                <constraints unique="false" nullable="false"/>
+            </column>
+
+        </createTable>
+
+
+        <createTable tableName="T_WORK_TIME">
+
+            <column name="id" type="bigint" autoIncrement="${autoIncrement}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="user_id" type="bigint" autoIncrement="${autoIncrement}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="project_id" type="bigint" autoIncrement="${autoIncrement}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="work_time_id" type="bigint" autoIncrement="${autoIncrement}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+        </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="T_WORK_TIME"
+                                 constraintName="fk_user_id"
+                                 referencedColumnNames="user_id"
+                                 referencedTableName="T_USER"/>
+
+        <addForeignKeyConstraint baseColumnNames="project_id"
+                                 baseTableName="T_WORK_TIME"
+                                 constraintName="fk_project_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="T_PROJECT"/>
+
+        <addForeignKeyConstraint baseColumnNames="work_time_id"
+                                 baseTableName="T_WORK_TIME"
+                                 constraintName="fk_work_time_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="T_DAILY_WORK_TIME"/>
+
+
+
+        <loadData
+                tableName="T_USER"
+                file="db/changelog/data/user.csv"
+                separator=";">
+            <column name="id" type="numeric"/>
+            <column name="created_date" type="timestamp"/>
+        </loadData>
+        <dropDefaultValue tableName="T_USER" columnName="created_date" columnDataType="datetime"/>
+        <loadData
+                file="db/changelog/data/authority.csv"
+                separator=";"
+                tableName="T_AUTHORITY"/>
+
+        <loadData
+                file="db/changelog/data/user_authority.csv"
+                separator=";"
+                tableName="T_USER_AUTHORITY"/>
+    </changeSet>
+
+
+</databaseChangeLog>
