@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_0og7mm1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="2.2.4">
+  <bpmn:process id="Process_WorkTime" name="workTime" isExecutable="true" camunda:versionTag="0.1">
+    <bpmn:startEvent id="StartEvent_0k8wwu4">
+      <bpmn:outgoing>SequenceFlow_118mnn3</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_118mnn3" sourceRef="StartEvent_0k8wwu4" targetRef="Task_0yc1m7p" />
+    <bpmn:serviceTask id="Task_0yc1m7p" name="Create WorkTime" camunda:delegateExpression="#{createWorkTimeDelegate}">
+      <bpmn:incoming>SequenceFlow_118mnn3</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1azfxx1</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1azfxx1" sourceRef="Task_0yc1m7p" targetRef="Task_1pc47hz" />
+    <bpmn:serviceTask id="Task_1pc47hz" name="Send created email" camunda:delegateExpression="#{sendWorkTimeCreatedEmailDelegate}">
+      <bpmn:incoming>SequenceFlow_1azfxx1</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0uclhxa</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_0uclhxa" sourceRef="Task_1pc47hz" targetRef="UserTask_Submit_WorkTime" />
+    <bpmn:userTask id="UserTask_Submit_WorkTime" name="Submit Worktime ">
+      <bpmn:incoming>SequenceFlow_0uclhxa</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0foxsb8</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1hswotm</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:boundaryEvent id="BoundaryEvent_07o8m50" cancelActivity="false" attachedToRef="UserTask_Submit_WorkTime">
+      <bpmn:outgoing>SequenceFlow_1ulkxkr</bpmn:outgoing>
+      <bpmn:timerEventDefinition>
+        <bpmn:timeCycle xsi:type="bpmn:tFormalExpression">R3/P1D</bpmn:timeCycle>
+      </bpmn:timerEventDefinition>
+    </bpmn:boundaryEvent>
+    <bpmn:userTask id="UserTask_Approve_WorkTime" name="Approve Worktime ">
+      <bpmn:incoming>SequenceFlow_1hswotm</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0m81iy2</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="Task_0z5o18h" name="Send reminder email" camunda:delegateExpression="#{sendWorkTimeReminderEmailDelegate}">
+      <bpmn:incoming>SequenceFlow_1ulkxkr</bpmn:incoming>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1hswotm" sourceRef="UserTask_Submit_WorkTime" targetRef="UserTask_Approve_WorkTime" />
+    <bpmn:exclusiveGateway id="ExclusiveGateway_1ks7e7a" name="is WorkTime approved ?">
+      <bpmn:incoming>SequenceFlow_0m81iy2</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1t3o4vw</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_04reijl</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_0m81iy2" sourceRef="UserTask_Approve_WorkTime" targetRef="ExclusiveGateway_1ks7e7a" />
+    <bpmn:sequenceFlow id="SequenceFlow_1t3o4vw" name="No" sourceRef="ExclusiveGateway_1ks7e7a" targetRef="Task_0r2lha1">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">#{not isWorkTimeApproved}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:serviceTask id="Task_0r2lha1" name="Send refused email" camunda:delegateExpression="#{sendWorkTimeRefusedEmailDelegate}">
+      <bpmn:incoming>SequenceFlow_1t3o4vw</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0foxsb8</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_0foxsb8" sourceRef="Task_0r2lha1" targetRef="UserTask_Submit_WorkTime" />
+    <bpmn:sequenceFlow id="SequenceFlow_1ulkxkr" sourceRef="BoundaryEvent_07o8m50" targetRef="Task_0z5o18h" />
+    <bpmn:serviceTask id="Task_020wi8u" name="Send approved email" camunda:delegateExpression="#{sendWorkTimeApprovedEmailDelegate}">
+      <bpmn:incoming>SequenceFlow_04reijl</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0ik5l42</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_04reijl" name="yes" sourceRef="ExclusiveGateway_1ks7e7a" targetRef="Task_020wi8u">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">#{isWorkTimeApproved}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:endEvent id="EndEvent_0yrxq04">
+      <bpmn:incoming>SequenceFlow_0ik5l42</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0ik5l42" sourceRef="Task_020wi8u" targetRef="EndEvent_0yrxq04" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_WorkTime">
+      <bpmndi:BPMNShape id="StartEvent_0k8wwu4_di" bpmnElement="StartEvent_0k8wwu4">
+        <dc:Bounds x="361" y="319" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_118mnn3_di" bpmnElement="SequenceFlow_118mnn3">
+        <di:waypoint x="397" y="337" />
+        <di:waypoint x="474" y="337" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_1c8cg29_di" bpmnElement="Task_0yc1m7p">
+        <dc:Bounds x="474" y="297" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1azfxx1_di" bpmnElement="SequenceFlow_1azfxx1">
+        <di:waypoint x="574" y="337" />
+        <di:waypoint x="651" y="337" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_0268ivv_di" bpmnElement="Task_1pc47hz">
+        <dc:Bounds x="651" y="297" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0uclhxa_di" bpmnElement="SequenceFlow_0uclhxa">
+        <di:waypoint x="751" y="337" />
+        <di:waypoint x="828" y="337" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_1gqzexz_di" bpmnElement="UserTask_Submit_WorkTime">
+        <dc:Bounds x="828" y="297" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_01q9jvw_di" bpmnElement="BoundaryEvent_07o8m50">
+        <dc:Bounds x="862" y="276" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_03zxvg8_di" bpmnElement="UserTask_Approve_WorkTime">
+        <dc:Bounds x="1018" y="297" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1p1cld4_di" bpmnElement="Task_0z5o18h">
+        <dc:Bounds x="1018" y="118" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1hswotm_di" bpmnElement="SequenceFlow_1hswotm">
+        <di:waypoint x="928" y="337" />
+        <di:waypoint x="1018" y="337" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ExclusiveGateway_1ks7e7a_di" bpmnElement="ExclusiveGateway_1ks7e7a" isMarkerVisible="true">
+        <dc:Bounds x="1208" y="312" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1203" y="282" width="61" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0m81iy2_di" bpmnElement="SequenceFlow_0m81iy2">
+        <di:waypoint x="1118" y="337" />
+        <di:waypoint x="1208" y="337" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1t3o4vw_di" bpmnElement="SequenceFlow_1t3o4vw">
+        <di:waypoint x="1233" y="362" />
+        <di:waypoint x="1233" y="462" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1241" y="409" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_0t53m7p_di" bpmnElement="Task_0r2lha1">
+        <dc:Bounds x="1183" y="462" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0foxsb8_di" bpmnElement="SequenceFlow_0foxsb8">
+        <di:waypoint x="1183" y="502" />
+        <di:waypoint x="878" y="502" />
+        <di:waypoint x="878" y="377" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1ulkxkr_di" bpmnElement="SequenceFlow_1ulkxkr">
+        <di:waypoint x="880" y="276" />
+        <di:waypoint x="880" y="158" />
+        <di:waypoint x="1018" y="158" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_1rcf0j1_di" bpmnElement="Task_020wi8u">
+        <dc:Bounds x="1382" y="297" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_04reijl_di" bpmnElement="SequenceFlow_04reijl">
+        <di:waypoint x="1258" y="337" />
+        <di:waypoint x="1382" y="337" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1271" y="343" width="17" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_0yrxq04_di" bpmnElement="EndEvent_0yrxq04">
+        <dc:Bounds x="1551" y="319" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0ik5l42_di" bpmnElement="SequenceFlow_0ik5l42">
+        <di:waypoint x="1482" y="337" />
+        <di:waypoint x="1551" y="337" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

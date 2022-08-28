@@ -1,8 +1,6 @@
 package tracker.com.entity;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -32,7 +30,7 @@ public class WorkTime extends AbstractAuditingEntity{
 
     @OneToMany
     @JoinColumn(name = "work_time_id")
-    private List<DailyWorkTime> dailyWorkTimes;
+    private List<RegularWorkTime> dailyWorkTimes;
 
     private String comment;
 

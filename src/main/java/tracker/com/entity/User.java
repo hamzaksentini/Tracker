@@ -8,13 +8,12 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "t_user")
+@Table(name = "T_USER")
 public class User extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -35,26 +34,22 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Column(name = "last_name", length = 50)
     private String lastName;
 
-    @Column(name ="email",length = 254, unique = true)
+    @Column(name = "email", length = 254, unique = true)
     private String email;
 
-    @Column
     private String phoneNumber;
 
-    @Column
     private String title;
 
-    @Column
     private BigDecimal salary;
 
-    @Column
-    private BigDecimal hourlyCostRate;
-
-    @Temporal(TemporalType.DATE)
     private LocalDate joinDate;
 
-    @Temporal(TemporalType.DATE)
     private LocalDate leaveDate;
+
+    @ManyToOne
+    @JoinColumn(name = "project_id")
+    private Project project;
 
     @JsonIgnore
     @ManyToMany

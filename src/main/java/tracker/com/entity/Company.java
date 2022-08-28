@@ -25,7 +25,4 @@ public class Company extends AbstractAuditingEntity {
 
     private Integer timeForPayment;
 
-    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "company")
-    private List<Project> projects = new ArrayList<>();
-
 }
