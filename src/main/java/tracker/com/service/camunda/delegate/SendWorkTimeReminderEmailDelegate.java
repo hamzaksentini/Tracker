@@ -1,4 +1,4 @@
-package tracker.com.service.delegate;
+package tracker.com.service.camunda.delegate;
 
 import lombok.extern.slf4j.Slf4j;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
@@ -7,11 +7,11 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class SendWorkTimeCreatedEmailDelegate implements JavaDelegate {
+public class SendWorkTimeReminderEmailDelegate implements JavaDelegate {
 
 
     @Override
     public void execute(DelegateExecution delegateExecution) throws Exception {
-        log.info("SendWorkTimeCreatedEmailDelegate");
+        log.info("SendWorkTimeReminderEmailDelegate");
     }
 }

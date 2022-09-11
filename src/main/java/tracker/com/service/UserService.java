@@ -16,10 +16,15 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public User findCurrentUser() {
+    public User findCurrent() {
         String login = SecurityUtils.getCurrentUserName()
                 .orElseThrow(() -> new IllegalStateException("Current user login not found"));
         return userRepository.findOneByLogin(login).get();
+    }
+
+    @Transactional(readOnly = true)
+    public User findById(Long userId) {
+        return userRepository.getById(userId);
     }
 
 }

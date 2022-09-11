@@ -20,7 +20,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(length = 50, unique = true, nullable = false)
     private String login;
