@@ -1,6 +1,8 @@
 package tracker.com;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.web.cors.CorsConfiguration;
 
@@ -9,5 +11,14 @@ import org.springframework.web.cors.CorsConfiguration;
 public class TrackerProperties {
 
     private CorsConfiguration cors;
+    private final Mail mail = new Mail();
+
+    @Setter
+    @Getter
+    public static class Mail {
+        private String from;
+        private String baseUrl;
+    }
+
 
 }

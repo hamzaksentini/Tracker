@@ -1,9 +1,12 @@
 package tracker.com.entity;
 
 import lombok.Data;
+import tracker.com.entity.converter.YearAttributeConverter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.Month;
+import java.time.Year;
 import java.util.List;
 
 /**
@@ -12,10 +15,10 @@ import java.util.List;
 @Entity
 @Data
 @Table(name = "T_WORK_TIME")
-public class WorkTime extends AbstractAuditingEntity{
+public class WorkTime extends AbstractAuditingEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
@@ -28,10 +31,20 @@ public class WorkTime extends AbstractAuditingEntity{
     @JoinColumn(name = "project_id")
     private Project project;
 
+    private String comment;
+
+    @NotNull
+    @Column(name = "month", columnDefinition = "smallint")
+    @Enumerated
+    private Month month;
+
+    @NotNull
+    @Column(name = "year", columnDefinition = "smallint")
+    @Convert(converter = YearAttributeConverter.class)
+    private Year year;
+
     @OneToMany
     @JoinColumn(name = "work_time_id")
     private List<RegularWorkTime> dailyWorkTimes;
-
-    private String comment;
 
 }

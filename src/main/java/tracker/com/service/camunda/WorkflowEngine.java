@@ -20,7 +20,7 @@ public class WorkflowEngine {
     }
 
     public void startProcessInstance(String key, String businessKey, Map<String, Object> processVariables) {
-        camunda.getRuntimeService().startProcessInstanceById(key, businessKey, processVariables).getProcessDefinitionId();
+        camunda.getRuntimeService().startProcessInstanceByKey(key, businessKey, processVariables).getProcessDefinitionId();
     }
 
     public void completeTask(String processDefinitionKey, String businessKey, String taskDefinitionKey, Map<String, Object> variables) {

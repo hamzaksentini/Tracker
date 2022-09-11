@@ -6,7 +6,7 @@ spring:
       enabled: true
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:h2:file:./target/h2db/db/tracker;DB_CLOSE_DELAY=-1
+    url: jdbc:h2:file:./target/h2db/db/tracker_test;DB_CLOSE_DELAY=-1
     username: root
     password:
     hikari:
@@ -21,8 +21,8 @@ spring:
   mail:
     host: localhost
     port: 25
-    username: contact@wijaa.com
-    password: Wijaa&2019
+    username: contact@test.com
+    password: testPwd
     properties:
       mail:
         smtp:
@@ -31,7 +31,8 @@ spring:
             enable: true
   thymeleaf:
     cache: false
-
+  liquibase:
+    drop-first: true
 tracker:
   cors:
     allowed-origins: 'http://localhost:8082,http://localhost:4200'
@@ -43,7 +44,6 @@ tracker:
   mail: # specific Wijja mail property, for standard properties see MailProperties
     from: contact@tracker.com
     base-url: http://localhost:4200
-
 
 camunda:
   bpm:

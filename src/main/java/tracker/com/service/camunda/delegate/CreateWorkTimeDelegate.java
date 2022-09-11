@@ -7,6 +7,8 @@ import tracker.com.entity.WorkTime;
 import tracker.com.repository.WorkTimeRepository;
 import tracker.com.service.UserService;
 
+import java.util.ArrayList;
+
 @Slf4j
 @Component
 public class CreateWorkTimeDelegate implements WorkTimeDelegate {
@@ -20,11 +22,15 @@ public class CreateWorkTimeDelegate implements WorkTimeDelegate {
     }
 
     @Override
-    public void execute(WorkTimeDelegateExecution delegateExecution) throws Exception {
+    public void execute(WorkTimeDelegateExecution delegateExecution) {
         WorkTime workTime = new WorkTime();
         User employee = userService.findById(delegateExecution.getEmployeeId());
         workTime.setEmployee(employee);
-
-        workTimeRepository.save(workTime);
+        workTime.setProject(employee.getProject());
+        workTime.setDailyWorkTimes(new ArrayList<>());
+        workTime.setMonth(delegateExecution.geMonth());
+        workTime.setYear(delegateExecution.getYear());
+        WorkTime createdWorkTime = workTimeRepository.save(workTime);
+        delegateExecution.setWorkTimeId(createdWorkTime.getId());
     }
 }

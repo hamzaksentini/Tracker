@@ -21,11 +21,27 @@
                 <constraints nullable="false"/>
             </column>
 
+            <column name="month" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="year" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="comment" type="varchar(50)">
+            </column>
+
+            <column name="created_date" type="timestamp"/>
+
+            <column name="created_by" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
 
         <createTable tableName="T_REGULAR_WORK_TIME">
 
-        <column name="id" type="bigint" autoIncrement="${autoIncrement}">
+            <column name="id" type="bigint" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
 
@@ -37,12 +53,18 @@
                 <constraints unique="false" nullable="false"/>
             </column>
 
-            <column name="date" type="date">
+            <column name="startDate" type="date">
                 <constraints unique="false" nullable="false"/>
             </column>
 
             <column name="work_time_id" type="bigint">
                 <constraints unique="true" nullable="false"/>
+            </column>
+
+            <column name="created_date" type="timestamp"/>
+
+            <column name="created_by" type="varchar(50)">
+                <constraints nullable="false"/>
             </column>
 
         </createTable>

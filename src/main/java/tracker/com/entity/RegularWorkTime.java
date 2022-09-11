@@ -25,6 +25,6 @@ public class RegularWorkTime extends AbstractAuditingEntity {
     private WorkUnitType type;
 
     @NotNull
-    private LocalDate date;
+    private LocalDate startDate;
 
 }
