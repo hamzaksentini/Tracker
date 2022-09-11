@@ -1,0 +1,237 @@
+<div class="container-fluid">
+
+  <!-- Page Heading -->
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">{{account.label}}</h1>
+
+  </div>
+
+  <!-- Content Row -->
+  <div class="row">
+
+    <!-- Earnings (Monthly) Card Example -->
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-primary shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                Balance
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">$ {{account.balance}}</div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-calendar fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+
+  <!-- Content Row -->
+
+  <div class="row">
+
+    <!-- Area Chart -->
+    <div class="col-xl-12 col-lg-12">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Operation History</h6>
+        </div>
+        <div class="card-body">
+          <table class="table">
+            <thead>
+            <tr>
+              <th scope="col">Type</th>
+              <th scope="col">Amount</th>
+              <th scope="col">Label</th>
+              <th scope="col">Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let operation of account.operations">
+              <th scope="row">{{operation.type}}</th>
+              <td> $ {{operation.amount}}</td>
+              <td> {{operation.label}}</td>
+              <td> {{operation.date}}</td>
+
+            </tr>
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+
+  <!-- Content Row -->
+  <div class="row">
+
+    <!-- Content Column -->
+    <div class="col-lg-6 mb-4">
+
+      <!-- Project Card Example -->
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Deposit</h6>
+        </div>
+        <div class="card-body">
+
+
+          <form
+            name="depositForm"
+            (ngSubmit)="f.form.valid && onDeposit()"
+            #f="ngForm"
+            novalidate
+          >
+            <div class="form-group">
+              <label for="amount">Amount</label>
+              <input
+                type="text"
+                class="form-control"
+                name="amount"
+                [(ngModel)]="depositForm.amount"
+                required
+                #amount="ngModel"
+              />
+              <div
+                class="alert alert-danger"
+                role="alert"
+                *ngIf="amount.errors && f.submitted"
+              >
+                Amount is required!
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="label">Label</label>
+              <input
+                type="label"
+                class="form-control"
+                name="label"
+                [(ngModel)]="depositForm.label"
+                required
+                minlength="4"
+                #label="ngModel"
+              />
+              <div
+                class="alert alert-danger"
+                role="alert"
+                *ngIf="label.errors && f.submitted"
+              >
+                <div *ngIf="label.errors.required">Label is required</div>
+                <div *ngIf="label.errors.minlength">
+                  Label must be at least 4 characters
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <button class="btn btn-primary btn-block">
+                Submit
+              </button>
+            </div>
+            <div class="form-group">
+              <div
+                class="alert alert-success"
+                role="alert"
+                *ngIf="f.submitted && isDepositSucceeded"
+              >
+                Deposit in account {{account.label}} Succeeded
+              </div>
+            </div>
+          </form>
+
+
+        </div>
+      </div>
+
+      <!-- Color System -->
+
+    </div>
+
+    <div class="col-lg-6 mb-4">
+
+      <!-- Illustrations -->
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Withdraw</h6>
+        </div>
+        <div class="card-body">
+
+
+          <form
+            name="withdrawForm"
+            (ngSubmit)="f.form.valid && onWithdraw()"
+            #f="ngForm"
+            novalidate
+          >
+            <div class="form-group">
+              <label for="amount">Amount</label>
+              <input
+                type="text"
+                class="form-control"
+                name="amount"
+                [(ngModel)]="withdrawForm.amount"
+                required
+                #amount="ngModel"
+              />
+              <div
+                class="alert alert-danger"
+                role="alert"
+                *ngIf="amount.errors && f.submitted"
+              >
+                Username is required!
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="label">Label</label>
+              <input
+                type="label"
+                class="form-control"
+                name="label"
+                [(ngModel)]="withdrawForm.label"
+                required
+                minlength="4"
+                #label="ngModel"
+              />
+              <div
+                class="alert alert-danger"
+                role="alert"
+                *ngIf="label.errors && f.submitted"
+              >
+                <div *ngIf="label.errors.required">Lable is required</div>
+                <div *ngIf="label.errors.minlength">
+                  Label must be at least 4 characters
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <button class="btn btn-primary btn-block">
+                Submit
+              </button>
+            </div>
+            <div class="form-group">
+              <div
+                class="alert alert-success"
+                role="alert"
+                *ngIf="f.submitted && isWithdrawSucceeded"
+              >
+                Withdraw in account {{account.label}} Succeeded
+              </div>
+            </div>
+          </form>
+
+
+        </div>
+      </div>
+
+      <!-- Approach -->
+
+    </div>
+  </div>
+
+</div>
